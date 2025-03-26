@@ -1,26 +1,21 @@
-{ stdenv
-, lib
-, fetchFromGitHub
-, cmake
-, perl
-, zlib
-, libxml2
-, eigen
-, python3
-, cairo
-, pcre
-, pkg-config
-, swig
-, rapidjson
-, boost
-, maeparser
-, coordgenlibs
-,
+{
+  stdenv,
+  lib,
+  fetchFromGitHub,
+  fetchpatch,
+  cmake,
+  zlib,
+  libxml2,
+  eigen,
+  python3,
+  cairo,
+  pcre,
+  pkg-config,
 }:
 
 stdenv.mkDerivation rec {
   pname = "openbabel";
-  version = "dev";
+  version = "2.4.1";
 
   src = lib.cleanSource ../.;
 
@@ -29,47 +24,20 @@ stdenv.mkDerivation rec {
   '';
 
   buildInputs = [
-    perl
     zlib
     libxml2
     eigen
     python3
     cairo
     pcre
-    swig
-    rapidjson
-    boost
-    maeparser
-    coordgenlibs
   ];
+
+  cmakeFlags = [ "-DCMAKE_CXX_STANDARD=14" ];
 
   nativeBuildInputs = [
     cmake
     pkg-config
   ];
-
-  preConfigure = ''
-    cmakeFlagsArray+=(
-      "-DRUN_SWIG=ON"
-      "-DPYTHON_BINDINGS=ON"
-      "-DPYTHON_INSTDIR=$out/${python3.sitePackages}"
-    )
-  '';
-
-  # Setuptools only accepts PEP 440 version strings. The "unstable" identifier
-  # can not be used. Instead we pretend to be the 3.2 beta release.
-  postFixup = ''
-    cat << EOF > $out/${python3.sitePackages}/setup.py
-    from setuptools import setup
-
-    setup(
-        name = 'pyopenbabel',
-        version = '3.2b1',
-        packages = ['openbabel'],
-        package_data = {'openbabel' : ['_openbabel.so']}
-    )
-    EOF
-  '';
 
   meta = with lib; {
     description = "Toolbox designed to speak the many languages of chemical data";
