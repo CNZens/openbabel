@@ -502,7 +502,7 @@ namespace OpenBabel
                     torsion=fabs(_parent->GetTorsion(nbrStart, _bgn, _end, nbrEnd));
 
                     // >12&&<168 not enough
-                    if (torsion > 15.0  && torsion < 160.0)
+                    if (torsion > 30.0  && torsion < 150.0)
                       {
                         // Geometry does not match a double bond
                         return(false);
