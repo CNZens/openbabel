@@ -26,6 +26,7 @@
       };
 
       formatter.x86_64-linux = pkgs.nixpkgs-fmt;
+	  overlays.default = import ./nix/overlay.nix;
 
     };
 }
